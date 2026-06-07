@@ -9,7 +9,7 @@
 
 A local MCP (Model Context Protocol) server that aggregates **15 web search and extraction tools** across 5 providers (Jina, Tavily, Exa, Firecrawl, Bocha) behind a unified interface. Each tool is gated by both an on/off switch and an API key check — AI agents only see tools they can actually use.
 
-**Status**: v0.2.6 — Production-ready with full test coverage (123 tests, 91% coverage).
+**Status**: v0.2.7 — Production-ready with full test coverage (123 tests, 91% coverage).
 
 ## Why MCP Server Metasearch?
 
