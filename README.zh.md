@@ -91,17 +91,39 @@ mcp-server-metasearch
 
 ### 2. 连接 MCP 客户端
 
+> **注意**：配置方式取决于你从 PyPI 安装还是从源码安装。请选择对应安装方式的配置。
+
 #### Claude Code
 
-Claude Code 从 `~/.claude/settings.json`（全局）或项目目录下的 `.claude/settings.json` 读取 MCP 服务器定义。
+**从 PyPI 安装：**
 
-**方式 A — 命令行向导：**
+```bash
+claude mcp add metasearch -- mcp-server-metasearch
+```
+
+<details>
+<summary>或直接编辑 <code>~/.claude/settings.json</code></summary>
+
+```json
+{
+  "mcpServers": {
+    "metasearch": {
+      "type": "stdio",
+      "command": "mcp-server-metasearch"
+    }
+  }
+}
+```
+</details>
+
+**从源码安装：**
 
 ```bash
 claude mcp add metasearch -- uv run --directory /absolute/path/to/mcp-server-metasearch mcp-server-metasearch
 ```
 
-**方式 B — 直接编辑配置文件：**
+<details>
+<summary>或直接编辑 <code>~/.claude/settings.json</code></summary>
 
 ```json
 {
@@ -119,16 +141,36 @@ claude mcp add metasearch -- uv run --directory /absolute/path/to/mcp-server-met
   }
 }
 ```
-
-> **注意**：项目在 `pyproject.toml` 中定义了入口点 `mcp-server-metasearch`，可以直接调用，无需使用 `python -m`。使用 `--directory` 而非 `--project` 可以确保正确设置工作目录，避免 PYTHONPATH 问题。
+</details>
 
 重启 Claude Code（`/quit` 后重新进入）。运行 `/mcp` 验证服务器是否出现。
 
 #### OpenClaw
 
-OpenClaw 通过客户端注册表管理 MCP 服务器。使用 CLI 或直接编辑 `openclaw.json`。
+**从 PyPI 安装：**
 
-**通过 CLI：**
+```bash
+openclaw mcp add metasearch --command mcp-server-metasearch
+```
+
+<details>
+<summary>或直接编辑 <code>openclaw.json</code></summary>
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "metasearch": {
+        "command": "mcp-server-metasearch",
+        "transport": "stdio"
+      }
+    }
+  }
+}
+```
+</details>
+
+**从源码安装：**
 
 ```bash
 openclaw mcp add metasearch \
@@ -139,7 +181,8 @@ openclaw mcp add metasearch \
   --arg mcp-server-metasearch
 ```
 
-**通过 JSON 配置（`openclaw.json` 或等效文件）：**
+<details>
+<summary>或直接编辑 <code>openclaw.json</code></summary>
 
 ```json
 {
@@ -159,14 +202,25 @@ openclaw mcp add metasearch \
   }
 }
 ```
+</details>
 
 运行 `openclaw mcp probe metasearch` 测试连接，无需启动完整对话。
 
 #### Hermes Agent
 
-Hermes 从 `~/.hermes/config.yaml` 的 `mcp_servers` 键读取 MCP 服务器。
+**从 PyPI 安装：**
 
 ```yaml
+# ~/.hermes/config.yaml
+mcp_servers:
+  metasearch:
+    command: "mcp-server-metasearch"
+```
+
+**从源码安装：**
+
+```yaml
+# ~/.hermes/config.yaml
 mcp_servers:
   metasearch:
     command: "uv"
@@ -180,6 +234,14 @@ mcp_servers:
 重启 Hermes 或运行 `hermes mcp list` 验证。使用 `hermes mcp test metasearch` 检查连接性和工具发现。
 
 #### 手动测试
+
+**从 PyPI 安装：**
+
+```bash
+mcp-server-metasearch
+```
+
+**从源码安装：**
 
 ```bash
 uv run --directory /absolute/path/to/mcp-server-metasearch mcp-server-metasearch

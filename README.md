@@ -91,17 +91,39 @@ See [Quick Start](#quick-start) above, then continue with your MCP client setup.
 
 ### 2. Connect to an MCP Client
 
+> **Note**: Configuration differs depending on whether you installed from PyPI or source. Choose the tab that matches your installation method.
+
 #### Claude Code
 
-Claude Code reads MCP server definitions from `~/.claude/settings.json` (global) or `.claude/settings.json` inside your project directory.
+**From PyPI:**
 
-**Option A — CLI wizard:**
+```bash
+claude mcp add metasearch -- mcp-server-metasearch
+```
+
+<details>
+<summary>Or edit <code>~/.claude/settings.json</code> directly</summary>
+
+```json
+{
+  "mcpServers": {
+    "metasearch": {
+      "type": "stdio",
+      "command": "mcp-server-metasearch"
+    }
+  }
+}
+```
+</details>
+
+**From Source:**
 
 ```bash
 claude mcp add metasearch -- uv run --directory /absolute/path/to/mcp-server-metasearch mcp-server-metasearch
 ```
 
-**Option B — Edit config file directly:**
+<details>
+<summary>Or edit <code>~/.claude/settings.json</code> directly</summary>
 
 ```json
 {
@@ -119,16 +141,36 @@ claude mcp add metasearch -- uv run --directory /absolute/path/to/mcp-server-met
   }
 }
 ```
-
-> **Note**: The project defines an entry point `mcp-server-metasearch` in `pyproject.toml`, so you can call it directly without `python -m`. Using `--directory` instead of `--project` ensures the working directory is set correctly, avoiding PYTHONPATH issues.
+</details>
 
 Restart Claude Code (`/quit` then re-enter). Run `/mcp` to verify the server appears.
 
 #### OpenClaw
 
-OpenClaw manages MCP servers through its client-side registry. Use the CLI or edit `openclaw.json` directly.
+**From PyPI:**
 
-**Via CLI:**
+```bash
+openclaw mcp add metasearch --command mcp-server-metasearch
+```
+
+<details>
+<summary>Or edit <code>openclaw.json</code> directly</summary>
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "metasearch": {
+        "command": "mcp-server-metasearch",
+        "transport": "stdio"
+      }
+    }
+  }
+}
+```
+</details>
+
+**From Source:**
 
 ```bash
 openclaw mcp add metasearch \
@@ -139,7 +181,8 @@ openclaw mcp add metasearch \
   --arg mcp-server-metasearch
 ```
 
-**Via JSON config (`openclaw.json` or equivalent):**
+<details>
+<summary>Or edit <code>openclaw.json</code> directly</summary>
 
 ```json
 {
@@ -159,14 +202,25 @@ openclaw mcp add metasearch \
   }
 }
 ```
+</details>
 
 Run `openclaw mcp probe metasearch` to test the connection without starting a full agent turn.
 
 #### Hermes Agent
 
-Hermes reads MCP servers from `~/.hermes/config.yaml` under the `mcp_servers` key.
+**From PyPI:**
 
 ```yaml
+# ~/.hermes/config.yaml
+mcp_servers:
+  metasearch:
+    command: "mcp-server-metasearch"
+```
+
+**From Source:**
+
+```yaml
+# ~/.hermes/config.yaml
 mcp_servers:
   metasearch:
     command: "uv"
@@ -180,6 +234,14 @@ mcp_servers:
 Restart Hermes or run `hermes mcp list` to verify. Use `hermes mcp test metasearch` to check connectivity and tool discovery.
 
 #### Manual Test
+
+**From PyPI:**
+
+```bash
+mcp-server-metasearch
+```
+
+**From Source:**
 
 ```bash
 uv run --directory /absolute/path/to/mcp-server-metasearch mcp-server-metasearch
