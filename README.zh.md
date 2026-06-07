@@ -35,21 +35,7 @@
 
 ## 快速开始
 
-### 从 PyPI 安装
-
-```bash
-pip install mcp-server-metasearch
-```
-
-### 或从源码安装
-
-```bash
-git clone https://github.com/busigui2023/mcp-server-metasearch.git
-cd mcp-server-metasearch
-uv venv && uv pip install -e ".[dev]"
-```
-
-### 配置
+### 1. 配置
 
 ```bash
 mkdir -p ~/.config/mcp-server-metasearch
@@ -57,13 +43,37 @@ cp .env.example ~/.config/mcp-server-metasearch/.env
 # 编辑 ~/.config/mcp-server-metasearch/.env 填入你的 API 密钥
 ```
 
-### 运行
+### 2. 运行
+
+**推荐 — 使用 `uvx`（无需安装）：**
 
 ```bash
-mcp-server-metasearch
+uvx mcp-server-metasearch
 ```
 
 或通过任意 MCP 客户端连接 — 参见下方[部署指南](#部署指南)。
+
+<details>
+<summary>备选：使用 pip 全局安装</summary>
+
+```bash
+pip install mcp-server-metasearch
+mcp-server-metasearch
+```
+
+</details>
+
+<details>
+<summary>备选：从源码安装</summary>
+
+```bash
+git clone https://github.com/busigui2023/mcp-server-metasearch.git
+cd mcp-server-metasearch
+uv venv && uv pip install -e ".[dev]"
+mcp-server-metasearch
+```
+
+</details>
 
 ## 核心特性
 
@@ -82,23 +92,23 @@ mcp-server-metasearch
 ### 前置条件
 
 - Python 3.10+
-- 已安装 [uv](https://docs.astral.sh/uv/)（或 `pip install mcp-server-metasearch`）
+- 已安装 [uv](https://docs.astral.sh/uv/)（提供 `uvx` 零安装运行）
 - 需要启用的服务对应的 API 密钥
 
-### 1. 安装与配置
+### 1. 配置
 
 参见上方[快速开始](#快速开始)，然后继续配置你的 MCP 客户端。
 
 ### 2. 连接 MCP 客户端
 
-> **注意**：配置方式取决于你从 PyPI 安装还是从源码安装。请选择对应安装方式的配置。
+> **注意**：推荐使用 `uvx` — 无需 `pip install`。`uvx` 首次运行时自动下载并缓存包，后续直接复用缓存。如果你从源码安装，请使用"从源码安装"选项。
 
 #### Claude Code
 
-**从 PyPI 安装：**
+**uvx（推荐）：**
 
 ```bash
-claude mcp add metasearch -- mcp-server-metasearch
+claude mcp add metasearch -- uvx mcp-server-metasearch
 ```
 
 <details>
@@ -109,7 +119,8 @@ claude mcp add metasearch -- mcp-server-metasearch
   "mcpServers": {
     "metasearch": {
       "type": "stdio",
-      "command": "mcp-server-metasearch"
+      "command": "uvx",
+      "args": ["mcp-server-metasearch"]
     }
   }
 }
@@ -147,10 +158,10 @@ claude mcp add metasearch -- uv run --directory /absolute/path/to/mcp-server-met
 
 #### OpenClaw
 
-**从 PyPI 安装：**
+**uvx（推荐）：**
 
 ```bash
-openclaw mcp add metasearch --command mcp-server-metasearch
+openclaw mcp add metasearch --command uvx --arg mcp-server-metasearch
 ```
 
 <details>
@@ -161,7 +172,8 @@ openclaw mcp add metasearch --command mcp-server-metasearch
   "mcp": {
     "servers": {
       "metasearch": {
-        "command": "mcp-server-metasearch",
+        "command": "uvx",
+        "args": ["mcp-server-metasearch"],
         "transport": "stdio"
       }
     }
@@ -208,13 +220,14 @@ openclaw mcp add metasearch \
 
 #### Hermes Agent
 
-**从 PyPI 安装：**
+**uvx（推荐）：**
 
 ```yaml
 # ~/.hermes/config.yaml
 mcp_servers:
   metasearch:
-    command: "mcp-server-metasearch"
+    command: "uvx"
+    args: ["mcp-server-metasearch"]
 ```
 
 **从源码安装：**
@@ -235,10 +248,10 @@ mcp_servers:
 
 #### 手动测试
 
-**从 PyPI 安装：**
+**uvx（推荐）：**
 
 ```bash
-mcp-server-metasearch
+uvx mcp-server-metasearch
 ```
 
 **从源码安装：**
@@ -301,9 +314,9 @@ rm ~/.cache/mcp-server-metasearch/startup_retries
 
 如果客户端捕获 stderr，请在那里查看。如果没有，检查项目目录中的日志文件。注意：日志文件是相对于服务器工作目录创建的，所以如果客户端更改了 CWD，日志可能出现在意外位置。
 
-### Q: 我可以不使用 `uv` 运行服务器吗？
+### Q: 我可以不使用 `uv` 或 `uvx` 运行服务器吗？
 
-**A:** 可以，但必须确保 Python 环境已安装所有依赖（`mcp`、`httpx`、`pydantic-settings`）。服务器入口点是 `python -m mcp_server_metasearch`。推荐使用 `uv`，因为它保证正确的虚拟环境和依赖版本。
+**A:** 可以。使用 `pip install mcp-server-metasearch` 全局安装（建议在独立虚拟环境中以避免污染系统 Python），然后直接运行 `mcp-server-metasearch`。注意：某些 Linux 发行版（Ubuntu 23.04+）因 PEP 668 限制阻止全局 `pip install` — 此时请使用 `uvx` 或虚拟环境。
 
 ## 内置工具
 

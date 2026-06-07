@@ -35,21 +35,7 @@ Instead of configuring 5 separate MCP servers (one per provider), metasearch giv
 
 ## Quick Start
 
-### Install from PyPI
-
-```bash
-pip install mcp-server-metasearch
-```
-
-### Or install from source
-
-```bash
-git clone https://github.com/busigui2023/mcp-server-metasearch.git
-cd mcp-server-metasearch
-uv venv && uv pip install -e ".[dev]"
-```
-
-### Configure
+### 1. Configure
 
 ```bash
 mkdir -p ~/.config/mcp-server-metasearch
@@ -57,13 +43,37 @@ cp .env.example ~/.config/mcp-server-metasearch/.env
 # Edit ~/.config/mcp-server-metasearch/.env with your API keys
 ```
 
-### Run
+### 2. Run
+
+**Recommended — via `uvx` (no install needed):**
 
 ```bash
-mcp-server-metasearch
+uvx mcp-server-metasearch
 ```
 
 Or connect via any MCP client — see [Deployment Guide](#deployment-guide) below.
+
+<details>
+<summary>Alternative: install globally with pip</summary>
+
+```bash
+pip install mcp-server-metasearch
+mcp-server-metasearch
+```
+
+</details>
+
+<details>
+<summary>Alternative: install from source</summary>
+
+```bash
+git clone https://github.com/busigui2023/mcp-server-metasearch.git
+cd mcp-server-metasearch
+uv venv && uv pip install -e ".[dev]"
+mcp-server-metasearch
+```
+
+</details>
 
 ## Core Features
 
@@ -82,23 +92,23 @@ Or connect via any MCP client — see [Deployment Guide](#deployment-guide) belo
 ### Prerequisites
 
 - Python 3.10+
-- [uv](https://docs.astral.sh/uv/) installed (or `pip install mcp-server-metasearch`)
+- [uv](https://docs.astral.sh/uv/) installed (provides `uvx` for zero-install runs)
 - API keys for the services you want to enable
 
-### 1. Install & Configure
+### 1. Configure
 
 See [Quick Start](#quick-start) above, then continue with your MCP client setup.
 
 ### 2. Connect to an MCP Client
 
-> **Note**: Configuration differs depending on whether you installed from PyPI or source. Choose the tab that matches your installation method.
+> **Note**: The recommended way is `uvx` — no `pip install` needed. `uvx` auto-downloads and caches the package on first run, then reuses the cache. If you installed from source, use the "From Source" tab instead.
 
 #### Claude Code
 
-**From PyPI:**
+**uvx (recommended):**
 
 ```bash
-claude mcp add metasearch -- mcp-server-metasearch
+claude mcp add metasearch -- uvx mcp-server-metasearch
 ```
 
 <details>
@@ -109,7 +119,8 @@ claude mcp add metasearch -- mcp-server-metasearch
   "mcpServers": {
     "metasearch": {
       "type": "stdio",
-      "command": "mcp-server-metasearch"
+      "command": "uvx",
+      "args": ["mcp-server-metasearch"]
     }
   }
 }
@@ -147,10 +158,10 @@ Restart Claude Code (`/quit` then re-enter). Run `/mcp` to verify the server app
 
 #### OpenClaw
 
-**From PyPI:**
+**uvx (recommended):**
 
 ```bash
-openclaw mcp add metasearch --command mcp-server-metasearch
+openclaw mcp add metasearch --command uvx --arg mcp-server-metasearch
 ```
 
 <details>
@@ -161,7 +172,8 @@ openclaw mcp add metasearch --command mcp-server-metasearch
   "mcp": {
     "servers": {
       "metasearch": {
-        "command": "mcp-server-metasearch",
+        "command": "uvx",
+        "args": ["mcp-server-metasearch"],
         "transport": "stdio"
       }
     }
@@ -208,13 +220,14 @@ Run `openclaw mcp probe metasearch` to test the connection without starting a fu
 
 #### Hermes Agent
 
-**From PyPI:**
+**uvx (recommended):**
 
 ```yaml
 # ~/.hermes/config.yaml
 mcp_servers:
   metasearch:
-    command: "mcp-server-metasearch"
+    command: "uvx"
+    args: ["mcp-server-metasearch"]
 ```
 
 **From Source:**
@@ -235,10 +248,10 @@ Restart Hermes or run `hermes mcp list` to verify. Use `hermes mcp test metasear
 
 #### Manual Test
 
-**From PyPI:**
+**uvx (recommended):**
 
 ```bash
-mcp-server-metasearch
+uvx mcp-server-metasearch
 ```
 
 **From Source:**
@@ -302,9 +315,9 @@ logs/mcp-server-metasearch.log
 
 If the client captures stderr, look there. If not, check the log file in the project directory. Note: the log file is created relative to the server's working directory, so if the client changes CWD, the log may appear in an unexpected location.
 
-### Q: Can I run the server without `uv`?
+### Q: Can I run the server without `uv` or `uvx`?
 
-**A:** Yes, but you must ensure the Python environment has all dependencies installed (`mcp`, `httpx`, `pydantic-settings`). The server entry point is `python -m mcp_server_metasearch`. Using `uv` is recommended because it guarantees the correct virtual environment and dependency versions.
+**A:** Yes. Install globally with `pip install mcp-server-metasearch` (preferably in a dedicated virtual environment to avoid polluting your system Python), then run `mcp-server-metasearch` directly. Note: some Linux distributions (Ubuntu 23.04+) block global `pip install` due to PEP 668 — in that case, use `uvx` or a virtual environment.
 
 ## Built-in Tools
 
