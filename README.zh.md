@@ -753,6 +753,18 @@ mcp-server-metasearch/
 └── tests/                    # 单元测试（123 个测试，91% 覆盖率）
 ```
 
+## 致谢
+
+本项目集成了以下搜索与提取服务：
+
+- [Jina AI](https://jina.ai/) — 网页阅读与搜索
+- [Tavily](https://tavily.com/) — 搜索、提取与研究
+- [Exa](https://exa.ai/) — 面向 LLM 的语义搜索
+- [Firecrawl](https://firecrawl.dev/) — 网页抓取与爬取
+- [博查 AI](https://open.bochaai.com/) — 中文优化搜索
+
+用户需要自行申请这些服务的 API 密钥。本项目不提供或分发任何 API 密钥。
+
 ## 许可证
 
 MIT 许可证 — 详见 [LICENSE](LICENSE)。

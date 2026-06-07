@@ -750,6 +750,18 @@ mcp-server-metasearch/
 └── tests/                    # Unit tests (123 tests, 91% coverage)
 ```
 
+## Acknowledgments
+
+This project integrates with the following search and extraction services:
+
+- [Jina AI](https://jina.ai/) — Web reader and search
+- [Tavily](https://tavily.com/) — Search, extract, and research
+- [Exa](https://exa.ai/) — Semantic search for LLMs
+- [Firecrawl](https://firecrawl.dev/) — Web scraping and crawling
+- [Bocha AI](https://open.bochaai.com/) — Chinese-optimized search
+
+Users need their own API keys for these services. This project does not provide or distribute any API keys.
+
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
