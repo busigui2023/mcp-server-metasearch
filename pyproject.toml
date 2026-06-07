@@ -1,0 +1,64 @@
+[project]
+name = "mcp-server-metasearch"
+dynamic = ["version"]
+description = "A local MCP server aggregating web tools with API-key-gated dynamic exposure"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.27.0",
+    "httpx>=0.27.0",
+    "pydantic-settings>=2.14.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+]
+
+[project.scripts]
+mcp-server-metasearch = "mcp_server_metasearch.server:main"
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_server_metasearch"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+# FastMCP requires explicit parameter signatures on tool.call() for JSON Schema
+# generation. This conflicts with BaseTool.call(**kwargs: Any), so we suppress
+# the override check on tool files.
+[[tool.mypy.overrides]]
+module = [
+    "mcp_server_metasearch.tools.jina_reader",
+    "mcp_server_metasearch.tools.jina_search",
+    "mcp_server_metasearch.tools.jina_deepsearch",
+    "mcp_server_metasearch.tools.tavily_search",
+    "mcp_server_metasearch.tools.tavily_extract",
+    "mcp_server_metasearch.tools.tavily_research",
+    "mcp_server_metasearch.tools.exa_search",
+    "mcp_server_metasearch.tools.exa_contents",
+    "mcp_server_metasearch.tools.exa_answer",
+    "mcp_server_metasearch.tools.firecrawl_scrape",
+    "mcp_server_metasearch.tools.firecrawl_search",
+    "mcp_server_metasearch.tools.firecrawl_map",
+    "mcp_server_metasearch.tools.firecrawl_crawl",
+    "mcp_server_metasearch.tools.bocha_web_search",
+    "mcp_server_metasearch.tools.bocha_ai_search",
+]
+disable_error_code = ["override"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
